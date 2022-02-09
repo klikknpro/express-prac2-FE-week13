@@ -6,6 +6,11 @@ function App() {
   const [characters, setCharacters] = useState("");
   const [series, setSeries] = useState([]);
 
+  const load = async () => {
+    const response = await http.get("http://localhost:3000/api/series");
+    setSeries(response.data);
+  };
+
   const createShow = async () => {
     await http.post("http://localhost:3000/api/series", {
       title: title,
@@ -18,11 +23,6 @@ function App() {
 
   const deleteShow = () => {};
 
-  const load = async () => {
-    const response = await http.get("http://localhost:3000/api/series");
-    setSeries(response.data);
-  };
-
   useEffect(() => {
     load();
   }, []);
@@ -31,7 +31,7 @@ function App() {
     <div className="App">
       <input type="text" placeholder="title" value={title} onChange={(e) => setTitle(e.target.value)}></input>
       <textarea placeholder="characters" value={characters} onChange={(e) => setCharacters(e.target.value)}></textarea>
-      <button onClick={createShow}>Create</button>
+      <button onClick={() => createShow()}>Create</button>
       {series.map((show) => (
         <div key={show.id}>
           <p>{show.title}</p>
@@ -41,7 +41,7 @@ function App() {
               <li key={char}>{char}</li>
             ))}
           </ul>
-          <button onClick={deleteShow}>Delete</button>
+          <button onClick={() => deleteShow()}>Delete</button>
         </div>
       ))}
     </div>
